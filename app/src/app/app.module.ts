@@ -21,6 +21,7 @@ import {
     NbWindowModule,
 } from '@nebular/theme';
 import { AdminComponent } from './admin/admin.component';
+import { AuthModule } from '@auth0/auth0-angular';
 
 @NgModule({
     declarations: [AppComponent, AdminComponent],
@@ -40,6 +41,13 @@ import { AdminComponent } from './admin/admin.component';
         }),
         CoreModule.forRoot(),
         ThemeModule.forRoot(),
+        AuthModule.forRoot({
+            domain: 'dev-hte6ekrcmpejgmww.au.auth0.com',
+            clientId: '1xT8bxpAJiFp5lD3rR76HD1I8wVm3t01',
+            authorizationParams: {
+                redirect_uri: 'http://localhost:4200',
+            },
+        }),
     ],
     bootstrap: [AppComponent],
 })

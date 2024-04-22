@@ -35,11 +35,20 @@
                         alt="Chmsu Logo"
                     />
                 </div>
-                <h4 style="z-index: 9999999">
-                    Institutional Dashboard <br />
-                    Monitoring
-                </h4>
-                <form [formGroup]="form" (submit)="onLoginSubmit()">
+                <h2 style="z-index: 9999999">
+                    Institutional Dashboard Monitoring
+                </h2>
+                <button
+                    (click)="auth.loginWithRedirect()"
+                    nbButton
+                    status="danger"
+                    size="medium"
+                    hero
+                    style="width: 200px; height: 50px"
+                >
+                    Log in
+                </button>
+                <!-- <form [formGroup]="form" (submit)="onLoginSubmit()">
                     <div class="form-group">
                         <label style="color: white" for="username"
                             >Username</label
@@ -113,7 +122,7 @@
                         type="submit"
                         value="Login"
                     />
-                </form>
+                </form> -->
             </div>
         </div>
     </nb-layout-column>
