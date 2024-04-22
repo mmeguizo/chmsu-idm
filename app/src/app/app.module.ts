@@ -20,9 +20,10 @@ import {
     NbToastrModule,
     NbWindowModule,
 } from '@nebular/theme';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, AdminComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
