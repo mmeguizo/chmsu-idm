@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 // import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { authService } from '../@core/services/auth.service';
+
 // import { AuthService } from '../@core/services/auth.service';
 // import { ConnectionService } from '../@core/services/connection.service';
 // import jwt_decode from "jwt-decode";
@@ -26,12 +28,15 @@ export class LoginComponent implements OnInit {
     // processing = false;
     // form: FormGroup;
 
+    profileJson: string = null;
+
     constructor(
         // public cs: ConnectionService,
         // private formBuilder: FormBuilder,
         // private authService: AuthService,
         // private router: Router,
-        public auth: AuthService
+        public auth: AuthService,
+        public user: authService
     ) {
         // this.createForm();
     }
@@ -39,6 +44,16 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         // this.createForm();
         console.log({ login: 'login component' });
+        console.log(window.location.origin);
+    }
+
+    loginWithRedirect() {
+        console.log(this.auth);
+        this.user.loginWithRedirect();
+        // this.user.loginWithRedirect();
+        // this.auth.loginWithRedirect({
+        //     appState: { target: '/admin' },
+        // });
     }
 
     // createForm() {

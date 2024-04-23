@@ -1,5 +1,6 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+
 import {
     NbAuthComponent,
     NbLoginComponent,
@@ -14,6 +15,11 @@ export const routes: Routes = [
         path: 'login',
         loadChildren: () =>
             import('./login/login.module').then((m) => m.LoginModule),
+    },
+    {
+        path: 'admin',
+        loadChildren: () =>
+            import('./admin/admin.module').then((m) => m.AdminModule),
     },
     {
         path: 'pages',

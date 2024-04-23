@@ -1,29 +1,77 @@
 <div class="header-container">
-  <div class="logo-container">
-    <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
-      <nb-icon icon="menu-2-outline"></nb-icon>
-    </a>
-    <a class="logo" href="#" (click)="navigateHome()">ngx-<span>admin</span></a>
-  </div>
-  <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
-    <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
-  </nb-select>
+    <div class="logo-container">
+        <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+            <nb-icon icon="menu-2-outline"></nb-icon>
+        </a>
+        <a class="chmsu-logos" href="#/pages" (click)="navigateHome()">
+            <img
+                src="assets/images/logo.png"
+                alt="Chmsu Logo"
+                class="logo-image logo-small"
+            />
+        </a>
+    </div>
 </div>
 
 <div class="header-container">
-  <nb-actions size="small">
-
-    <nb-action class="control-item">
+    <nb-select
+        [selected]="currentTheme"
+        (selectedChange)="changeTheme($event)"
+        status="primary"
+    >
+        <nb-option *ngFor="let theme of themes" [value]="theme.value">
+            {{ theme.name }}</nb-option
+        >
+    </nb-select>
+    <nb-actions size="small">
+        <!-- <nb-action class="control-item">
       <nb-search type="rotate-layout"></nb-search>
     </nb-action>
     <nb-action class="control-item" icon="email-outline"></nb-action>
-    <nb-action class="control-item" icon="bell-outline"></nb-action>
-    <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
-      <nb-user [nbContextMenu]="userMenu"
-               [onlyPicture]="userPictureOnly"
-               [name]="user?.name"
-               [picture]="user?.picture">
-      </nb-user>
-    </nb-action>
-  </nb-actions>
+    <nb-action class="control-item" icon="bell-outline"></nb-action> -->
+
+        <div *ngIf="auth; else showNgTemplate"></div>
+        <ul
+            class="navbar-nav d-md-none justify-content-between"
+            *ngIf="auth.user$ | async as user"
+            style="min-height: 170px"
+        >
+            <li class="nav-item">
+                <span class="user-info">
+                    <!-- Profile image should be set to the profile picture from the id token -->
+                    <img
+                        alt="Profile picture"
+                        class="nav-user-profile d-inline-block rounded-circle mr-3"
+                        style="width: 75px"
+                        [src]="user.picture"
+                    />
+                    <!-- Show the user's full name from the id token here -->
+                    <h6 class="d-inline-block">{{ user.name }}</h6>
+                </span>
+            </li>
+            <li>
+                <fa-icon [icon]="faUser" class="mr-3"></fa-icon>
+                <a routerLink="/profile">Profile</a>
+            </li>
+
+            <li>
+                <fa-icon [icon]="faPowerOff" class="mr-3"></fa-icon>
+                <button class="btn btn-link p-0" (click)="logout()">
+                    Log out
+                </button>
+            </li>
+        </ul>
+
+        <ng-template #showNgTemplate>
+            <nb-action class="user-action" *nbIsGranted="['view', 'user']">
+                <nb-user
+                    [nbContextMenu]="userMenu"
+                    [onlyPicture]="userPictureOnly"
+                    [name]="user?.name"
+                    [picture]="user?.picture"
+                >
+                </nb-user>
+            </nb-action>
+        </ng-template>
+    </nb-actions>
 </div>

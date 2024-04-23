@@ -20,11 +20,14 @@ import {
     NbToastrModule,
     NbWindowModule,
 } from '@nebular/theme';
-import { AdminComponent } from './admin/admin.component';
 import { AuthModule } from '@auth0/auth0-angular';
+import { AdminModule } from './admin/admin.module';
+
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
 
 @NgModule({
-    declarations: [AppComponent, AdminComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -45,9 +48,10 @@ import { AuthModule } from '@auth0/auth0-angular';
             domain: 'dev-hte6ekrcmpejgmww.au.auth0.com',
             clientId: '1xT8bxpAJiFp5lD3rR76HD1I8wVm3t01',
             authorizationParams: {
-                redirect_uri: 'http://localhost:4200',
+                redirect_uri: window.location.origin,
             },
         }),
+        AdminModule,
     ],
     bootstrap: [AppComponent],
 })
