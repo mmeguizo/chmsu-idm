@@ -12,6 +12,8 @@ require('http').Server(app);
 
 //routes
 const users = require('./routes/users')(router);
+const authentication = require('./routes/authentication')(router);
+const file = require('./routes/file')(router);
 
 mongoose
     .connect(config.uri)
@@ -22,7 +24,19 @@ app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: false }));
 
+//for deployment on hosting and build
+app.use(express.static(__dirname + '/app/dist/'));
+app.use('/images', express.static(path.join(__dirname, './images')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads/files')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads/images')));
+
 app.use('/users', users);
+app.use('/authentication', authentication);
+app.use('/fileupload', file);
+app.use(
+    '/profile_pic',
+    express.static(path.join(__dirname, '../uploads/images'))
+);
 
 app.get('*', (req, res) => {
     //   res.sendFile(path.join(__dirname + '/app/dist/index.html'));

@@ -1,4 +1,4 @@
-h4 {
+h2 {
     font-family: 'Archivo Black', sans-serif;
     // color:#878787;
     color: #fff;
@@ -87,6 +87,9 @@ h4 {
     height: auto; /* Maintain aspect ratio */
 }
 
+.submit {
+    background-color: crimson;
+}
 form {
     padding: 20px 0;
     position: relative;
@@ -328,6 +331,43 @@ button:hover {
 @media (max-width: 600px) {
     .wrapper {
         width: 90vw; /* Increase width for smaller screens */
-        height: 80vh; /* Increase height for smaller screens */
+        height: 88vh; /* Increase height for smaller screens */
     }
+}
+// X-Small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {
+    .container {
+        margin-top: 52px;
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (max-width: 360px) {
+    .chmsu-logo {
+        width: 41%;
+    }
+
+    .username,
+    .password,
+    .submit {
+        width: 200px !important;
+    }
+    h2 {
+        font-size: smaller;
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+}
+
+// X-Large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+}
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1400px) {
 }

@@ -20,10 +20,18 @@ import {
     NbToastrModule,
     NbWindowModule,
 } from '@nebular/theme';
-import { AdminComponent } from './admin/admin.component';
+import { AuthModule } from '@auth0/auth0-angular';
+import { AdminModule } from './admin/admin.module';
+import { JwtModule } from '@auth0/angular-jwt';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+
+export function tokenGetter() {
+    return localStorage.getItem('token');
+}
 
 @NgModule({
-    declarations: [AppComponent, AdminComponent],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -40,6 +48,19 @@ import { AdminComponent } from './admin/admin.component';
         }),
         CoreModule.forRoot(),
         ThemeModule.forRoot(),
+        AuthModule.forRoot({
+            domain: 'dev-hte6ekrcmpejgmww.au.auth0.com',
+            clientId: '1xT8bxpAJiFp5lD3rR76HD1I8wVm3t01',
+            authorizationParams: {
+                redirect_uri: window.location.origin,
+            },
+        }),
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
+            },
+        }),
+        AdminModule,
     ],
     bootstrap: [AppComponent],
 })

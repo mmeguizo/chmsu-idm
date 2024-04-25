@@ -38,6 +38,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    profile_pic: { type: String, default: 'no-photo.png' },
 });
 
 userSchema.pre('save', function (next) {

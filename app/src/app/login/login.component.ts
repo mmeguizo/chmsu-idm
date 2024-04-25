@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { log } from 'console';
+// import { AuthService } from '@auth0/auth0-angular';
+import { AuthService } from '../@core/services/auth.service';
+
 // import { AuthService } from '../@core/services/auth.service';
 // import { ConnectionService } from '../@core/services/connection.service';
-// import jwt_decode from "jwt-decode";
-// import { UserToken } from '../@core/data/user-token';
+import { jwtDecode } from 'jwt-decode';
+import { UserToken } from '../@core/data/user-token';
 
 @Component({
     selector: 'ngx-login',
@@ -26,18 +28,33 @@ export class LoginComponent implements OnInit {
     processing = false;
     form: FormGroup;
 
+    profileJson: string = null;
+
     constructor(
         // public cs: ConnectionService,
         private formBuilder: FormBuilder,
         // private authService: AuthService,
-        private router: Router
+        private router: Router,
+        // public auth: AuthService,
+        public user: AuthService
     ) {
         // this.createForm();
     }
 
     ngOnInit() {
         this.createForm();
+        // console.log({ login: 'login component' });
+        // console.log(window.location.origin);
     }
+
+    // loginWithRedirect() {
+    //     console.log(this.auth);
+    //     this.user.loginWithRedirect();
+    //     this.user.loginWithRedirect();
+    //     this.auth.loginWithRedirect({
+    //         appState: { target: '/admin' },
+    //     });
+    // }
 
     createForm() {
         console.log({ login: 'login form' });
@@ -71,27 +88,33 @@ export class LoginComponent implements OnInit {
             username: this.form.get('username').value, // Username input field
             password: this.form.get('password').value, // Password input field
         };
+
+        // Function to send login data to API
+        this.user.login(user).subscribe((token: any) => {
+            let decoded = jwtDecode<UserToken>(token.token);
+
+            console.log({ token: token });
+            console.log({ decoded: decoded });
+
+            // Check if response was a success or error
+            if (!token.success) {
+                this.user.makeToast(
+                    'danger',
+                    'Failed Logging in',
+                    token.message
+                );
+                this.processing = false; // Enable submit button
+                this.enableForm(); // Enable form for editting
+            } else {
+                this.user.makeToast('success', 'Success', token.message);
+                this.user.storeUserData(token.token, decoded);
+                if (this.user.CurrentlyloggedIn()) {
+                    this.user.loggingIn(decoded.role);
+                } else {
+                    this.user.logout();
+                    this.router.navigate(['login']); // Navigate to dashboard view
+                }
+            }
+        });
     }
-
-    //   // Function to send login data to API
-    //   this.authService.login(user).subscribe((token: any) => {
-
-    //     let decoded = jwt_decode<UserToken>(token.token);
-
-    //     //Check if response was a success or error
-    //     if (!token.success) {
-    //       this.authService.makeToast('danger', 'Failed Logging in', token.message);
-    //       this.processing = false; // Enable submit button
-    //       this.enableForm(); // Enable form for editting
-    //     } else {
-    //       this.authService.makeToast('success', 'Success', token.message);
-    //       this.authService.storeUserData(token.token,decoded);
-    //       if (this.authService.CurrentlyloggedIn()) {
-    //           this.authService.loggingIn(decoded.role)
-    //       } else {
-    //         this.authService.logout()
-    //         this.router.navigate(['login']); // Navigate to dashboard view
-    //       }
-    //     }
-    //   });
 }
