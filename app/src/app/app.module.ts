@@ -22,9 +22,13 @@ import {
 } from '@nebular/theme';
 import { AuthModule } from '@auth0/auth0-angular';
 import { AdminModule } from './admin/admin.module';
-
+import { JwtModule } from '@auth0/angular-jwt';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+
+export function tokenGetter() {
+    return localStorage.getItem('token');
+}
 
 @NgModule({
     declarations: [AppComponent],
@@ -49,6 +53,11 @@ import { AuthHttpInterceptor } from '@auth0/auth0-angular';
             clientId: '1xT8bxpAJiFp5lD3rR76HD1I8wVm3t01',
             authorizationParams: {
                 redirect_uri: window.location.origin,
+            },
+        }),
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
             },
         }),
         AdminModule,

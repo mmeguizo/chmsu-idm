@@ -26,7 +26,7 @@
   <nb-layout-column> -->
 <nb-layout>
     <nb-layout-column>
-        <div class="wrapper">
+        <div class="wrapper container-fluid">
             <div class="container">
                 <div class="text-center mb-4">
                     <img
@@ -38,7 +38,7 @@
                 <h2 style="z-index: 9999999">
                     Institutional Dashboard Monitoring
                 </h2>
-                <button
+                <!-- <button
                     (click)="loginWithRedirect()"
                     nbButton
                     status="danger"
@@ -47,8 +47,8 @@
                     style="width: 200px; height: 50px"
                 >
                     Log in
-                </button>
-                <!-- <form [formGroup]="form" (submit)="onLoginSubmit()">
+                </button> -->
+                <form [formGroup]="form" (submit)="onLoginSubmit()">
                     <div class="form-group">
                         <label style="color: white" for="username"
                             >Username</label
@@ -64,7 +64,7 @@
                             }"
                         >
                             <input
-                                class="form-control"
+                                class="form-control username"
                                 type="text"
                                 name="username"
                                 formControlName="username"
@@ -98,7 +98,7 @@
                             }"
                         >
                             <input
-                                class="form-control"
+                                class="form-control password"
                                 type="password"
                                 name="password"
                                 formControlName="password"
@@ -118,11 +118,11 @@
                     </div>
                     <input
                         [disabled]="!form.valid || processing"
-                        class="btn btn-primary"
+                        class="btn btn-primary submit"
                         type="submit"
                         value="Login"
                     />
-                </form> -->
+                </form>
             </div>
         </div>
     </nb-layout-column>

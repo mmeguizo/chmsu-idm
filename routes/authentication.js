@@ -2,6 +2,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
+const { comparePassword } = require('../config/password');
 
 module.exports = (router) => {
     router.post('/register', (req, res) => {
@@ -182,6 +183,8 @@ module.exports = (router) => {
                 expiresIn: '24h',
             });
 
+            console.log({ token: token });
+
             return res.json({
                 success: true,
                 message: 'Password is Correct',
@@ -198,11 +201,11 @@ module.exports = (router) => {
         //i slice the word 'Bearer '  = 7
         //let token = (req.headers['authorization']).slice(7);
         var token = '';
-        if (req.headers['authorization']) {
-            token = req.headers['authorization'].substring(
-                req.headers['authorization'].indexOf(' ') + 1
-            );
-        }
+        // if (req.headers['authorization']) {
+        //     token = req.headers['authorization'].substring(
+        //         req.headers['authorization'].indexOf(' ') + 1
+        //     );
+        // }
 
         if (!token) {
             res.json({ success: false, message: 'No token provided' });

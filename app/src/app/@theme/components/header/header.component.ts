@@ -5,13 +5,13 @@ import {
     NbSidebarService,
     NbThemeService,
 } from '@nebular/theme';
-import { AuthService } from '@auth0/auth0-angular';
+// import { AuthService } from '@auth0/auth0-angular';
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-// import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth.service';
 
 @Component({
     selector: 'ngx-header',
@@ -42,15 +42,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
         },
     ];
 
-    currentTheme = 'default';
-
+    currentTheme: any;
+    public contentInit = false;
     userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
-    private _user: any = null;
-    private _isAuthenticated: boolean = false;
-    private _token: any = null;
-
-    profileJson: string = null;
+    name: string;
+    profile_pic: string;
 
     constructor(
         private sidebarService: NbSidebarService,
@@ -58,11 +55,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         private themeService: NbThemeService,
         private userService: UserData,
         private layoutService: LayoutService,
-        private breakpointService: NbMediaBreakpointsService,
         public auth: AuthService,
+        private breakpointService: NbMediaBreakpointsService,
         @Inject(DOCUMENT) private doc: Document
     ) {
-        console.log(this.auth.user$);
+        const savedTheme = this.getCurrentTheme();
+        if (savedTheme) {
+            this.setThemeStyle(savedTheme);
+        }
     }
 
     ngOnInit() {
@@ -72,6 +72,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
             .getUsers()
             .pipe(takeUntil(this.destroy$))
             .subscribe((users: any) => (this.user = users.nick));
+
+        this.menuService.onItemClick().subscribe((event) => {
+            //boolean content init will stop the subscribed data from multiplying which cause incremental event
+            if (this.contentInit == false) {
+                this.onItemSelection(event.item.title);
+            }
+        });
+
+        this.name = this.auth.getTokenUsername();
+        this.profile_pic = this.auth.getUserProfilePic() || 'no-photo.png';
 
         const { xl } = this.breakpointService.getBreakpointsMap();
         this.themeService
@@ -90,11 +100,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 map(({ name }) => name),
                 takeUntil(this.destroy$)
             )
-            .subscribe((themeName) => (this.currentTheme = themeName));
-
-        this.auth.user$.subscribe(
-            (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
-        );
+            .subscribe((themeName) => {
+                this.currentTheme = themeName;
+                this.saveTheme(themeName);
+            });
     }
 
     ngOnDestroy() {
@@ -103,7 +112,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     changeTheme(themeName: string) {
+        this.setThemeStyle(themeName);
+    }
+
+    setThemeStyle(themeName: string) {
+        this.currentTheme = themeName;
         this.themeService.changeTheme(themeName);
+        localStorage.setItem('theme', themeName);
+    }
+
+    saveTheme(themeName: string) {
+        localStorage.setItem('theme', themeName);
+    }
+
+    getCurrentTheme() {
+        return localStorage.getItem('theme');
     }
 
     toggleSidebar(): boolean {
@@ -116,5 +139,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     navigateHome() {
         this.menuService.navigateHome();
         return false;
+    }
+
+    onItemSelection(title) {
+        if (title === 'Log out') {
+            console.log('clikc logout');
+
+            // const activeModal = this.ngbModal.open(CommonComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
+            // activeModal.componentInstance.headerTitle = 'Logout',
+            // activeModal.componentInstance.bodyContent ='Are you sure you want to logout?',
+            // activeModal.componentInstance.username = this.name
+        } else if (title === 'Profile') {
+            console.log('click profile');
+
+            // const activeModal = this.ngbModal.open(UpdateProfileComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
+        }
     }
 }
