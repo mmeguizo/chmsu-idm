@@ -5,13 +5,13 @@ import {
     NbSidebarService,
     NbThemeService,
 } from '@nebular/theme';
-// import { AuthService } from '@auth0/auth0-angular';
+import { AuthService } from '@auth0/auth0-angular';
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthServices } from '../../../@core/services/auth.service';
 
 @Component({
     selector: 'ngx-header',
@@ -49,13 +49,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     name: string;
     profile_pic: string;
 
+    profileJson: string = null;
+
     constructor(
         private sidebarService: NbSidebarService,
         private menuService: NbMenuService,
         private themeService: NbThemeService,
         private userService: UserData,
         private layoutService: LayoutService,
-        public auth: AuthService,
+        public auth: AuthServices,
+        public auth0: AuthService,
         private breakpointService: NbMediaBreakpointsService,
         @Inject(DOCUMENT) private doc: Document
     ) {
@@ -68,10 +71,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.currentTheme = this.themeService.currentTheme;
 
-        this.userService
-            .getUsers()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((users: any) => (this.user = users.nick));
+        // this.userService
+        //     .getUsers()
+        //     .pipe(takeUntil(this.destroy$))
+        //     .subscribe((users: any) => (this.user = users.nick));
 
         this.menuService.onItemClick().subscribe((event) => {
             //boolean content init will stop the subscribed data from multiplying which cause incremental event
@@ -80,8 +83,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.name = this.auth.getTokenUsername();
-        this.profile_pic = this.auth.getUserProfilePic() || 'no-photo.png';
+        // this.name = this.auth.getTokenUsername();
+        // this.profile_pic = this.auth.getUserProfilePic() || 'no-photo.png';
 
         const { xl } = this.breakpointService.getBreakpointsMap();
         this.themeService
@@ -104,6 +107,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.currentTheme = themeName;
                 this.saveTheme(themeName);
             });
+        setTimeout(() => {
+            this.auth0.user$.subscribe(
+                (profile) =>
+                    (this.profileJson = JSON.stringify(profile, null, 2))
+            );
+        });
+        console.log(this.auth0.user$);
+
+        console.log(this.profileJson);
     }
 
     ngOnDestroy() {
@@ -119,6 +131,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentTheme = themeName;
         this.themeService.changeTheme(themeName);
         localStorage.setItem('theme', themeName);
+
+        console.log(this.auth0.user$);
+
+        console.log(this.profileJson);
     }
 
     saveTheme(themeName: string) {
@@ -144,7 +160,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     onItemSelection(title) {
         if (title === 'Log out') {
             console.log('clikc logout');
+            console.log(this.auth0.user$);
 
+            console.log(this.profileJson);
             // const activeModal = this.ngbModal.open(CommonComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
             // activeModal.componentInstance.headerTitle = 'Logout',
             // activeModal.componentInstance.bodyContent ='Are you sure you want to logout?',
@@ -154,5 +172,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
             // const activeModal = this.ngbModal.open(UpdateProfileComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
         }
+    }
+
+    logout() {
+        this.auth0.logout({
+            logoutParams: { returnTo: this.doc.location.origin },
+        });
     }
 }

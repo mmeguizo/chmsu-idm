@@ -35,13 +35,23 @@
             *nbIsGranted="['view', 'user']"
             matRipple
         >
-            <nb-user
+            <!-- <nb-user
                 [nbContextMenu]="userMenu"
                 nbSpinnerStatus="success"
                 [name]="auth?.getTokenUsername() | titlecase"
                 [title]="auth?.getUserRole()"
                 [onlyPicture]="userPictureOnly"
                 [picture]="this.auth.domain + '/images/' + profile_pic"
+            >
+            </nb-user> -->
+
+            <nb-user
+                *ngIf="auth0.user$ | async as user"
+                [nbContextMenu]="userMenu"
+                nbSpinnerStatus="success"
+                [name]="user.name"
+                [onlyPicture]="userPictureOnly"
+                [picture]="user.picture"
             >
             </nb-user>
         </nb-action>

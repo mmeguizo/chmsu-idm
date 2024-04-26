@@ -26,7 +26,7 @@ import {
 @Injectable({
     providedIn: 'root',
 })
-export class AuthService {
+export class AuthServices {
     public domain;
     authToken;
     user;

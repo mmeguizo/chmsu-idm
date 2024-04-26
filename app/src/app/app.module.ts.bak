@@ -55,8 +55,8 @@ export function tokenGetter() {
                 redirect_uri: window.location.origin,
             },
 			 useRefreshTokens: true,
-			 useRefreshTokensFallback: false,
-			 cacheLocation: 'localstorage',
+      useRefreshTokensFallback: false,
+      cacheLocation: 'localstorage',
         }),
         JwtModule.forRoot({
             config: {

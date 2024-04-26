@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-// import { AuthService } from '@auth0/auth0-angular';
-import { AuthService } from '../@core/services/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { AuthServices } from '../@core/services/auth.service';
 
 // import { AuthService } from '../@core/services/auth.service';
 // import { ConnectionService } from '../@core/services/connection.service';
@@ -35,14 +35,15 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         // private authService: AuthService,
         private router: Router,
-        // public auth: AuthService,
-        public user: AuthService
+        public auth: AuthService,
+        public user: AuthServices
     ) {
         // this.createForm();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.createForm();
+        await this.auth.handleRedirectCallback();
         // console.log({ login: 'login component' });
         // console.log(window.location.origin);
     }
@@ -116,5 +117,15 @@ export class LoginComponent implements OnInit {
                 }
             }
         });
+    }
+
+    async loginWithRedirect() {
+        this.auth.loginWithRedirect({
+            appState: { target: '/admin' },
+        });
+        // const user = await this.auth.isAuthenticated$;
+        // const userData = await this.auth.user$;
+        // console.log({ user: user });
+        // console.log({ userData: userData });
     }
 }
