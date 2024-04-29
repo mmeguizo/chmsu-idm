@@ -1,0 +1,35 @@
+<!-- <nb-card>
+    <nb-card-header> Performing {{  headerTitle  | titlecase}}  <button class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button></nb-card-header>
+  <nb-card-body>
+    <span class="align-center"> {{ bodyContent | titlecase }} {{ username || anyVariable | titlecase}}</span>
+  </nb-card-body>
+  <nb-card-footer >
+    <button nbButton status="danger" class="float-left" (click)="closeModal()">No</button>
+    <br />
+    <button nbButton status="success" class="float-right" (click)="runQuery()">Yes</button>
+  </nb-card-footer>
+</nb-card> -->
+
+<nb-card>
+    <nb-card-header>
+        {{ this.employeeId.title | titlecase
+        }}<button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <span class="align-center">
+            {{ this.employeeId.message | titlecase }}
+            {{ this.employeeId.name | titlecase }}
+        </span>
+    </nb-card-body>
+    <nb-card-footer style="display: flex; justify-content: space-between">
+        <button class="cancel" nbButton status="danger" (click)="closeModal()">
+            No
+        </button>
+        <span> {{ ' ' }}</span>
+        <button nbButton status="success" (click)="runQuery()">Yes</button>
+    </nb-card-footer>
+</nb-card>

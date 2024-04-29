@@ -1,0 +1,177 @@
+<div class="col-md-12 main-profile-container">
+    <nb-card class="card-container">
+        <nb-card-header> Update Profile</nb-card-header>
+        <nb-card-body>
+            <form [formGroup]="form" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="inputFirstName" class="label"
+                                >Username</label
+                            >
+                            <input
+                                type="text"
+                                nbInput
+                                fullWidth
+                                id="username"
+                                [status]="
+                                    form?.get('username').touched &&
+                                    form.controls['username'].errors?.required
+                                        ? 'danger'
+                                        : ''
+                                "
+                                placeholder="Username"
+                                formControlName="username"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="inputLastName" class="label"
+                                >Email</label
+                            >
+                            <input
+                                type="email"
+                                nbInput
+                                fullWidth
+                                id="email"
+                                [status]="
+                                    form?.get('email').touched &&
+                                    form.controls['email'].errors?.required
+                                        ? 'danger'
+                                        : ''
+                                "
+                                placeholder="Email"
+                                formControlName="email"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="inputEmail" class="label"
+                                >Current Password</label
+                            >
+                            <input
+                                type="{{ showpassword ? 'text' : 'password' }}"
+                                nbInput
+                                fullWidth
+                                id="password"
+                                [status]="
+                                    form?.get('password').touched &&
+                                    form.controls['password'].errors?.required
+                                        ? 'danger'
+                                        : ''
+                                "
+                                placeholder="Password"
+                                formControlName="password"
+                            />
+                            <nb-icon
+                                class="password-icon"
+                                [icon]="eyeIcon"
+                                (click)="showPassword()"
+                                pack="eva"
+                            ></nb-icon>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="inputWebsite" class="label"
+                                >New Password</label
+                            >
+                            <input
+                                type="{{ showpassword ? 'text' : 'password' }}"
+                                nbInput
+                                fullWidth
+                                id="confirm"
+                                [status]="
+                                    form?.get('confirm').touched &&
+                                    form.controls['confirm'].errors?.required
+                                        ? 'danger'
+                                        : ''
+                                "
+                                placeholder="Confirm Password"
+                                formControlName="confirm"
+                            />
+                            <nb-icon
+                                class="password-icon"
+                                [icon]="eyeIcon"
+                                (click)="showPassword()"
+                                pack="eva"
+                            ></nb-icon>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="avatar-container">
+                                <!-- <div class="display-photo" *ngIf="profile_pic">
+            <img   [src]="this.auth.domain+'/profile_pic/'+profile_pic ">
+          </div> -->
+                                <div
+                                    class="display-photo"
+                                    *ngIf="profile_pic"
+                                    [style.background-image]="
+                                        'url(' +
+                                        this.auth.domain +
+                                        '/images/' +
+                                        profile_pic +
+                                        ')'
+                                    "
+                                ></div>
+                                <div
+                                    class="display-photo"
+                                    *ngIf="!profile_pic"
+                                    [style.background-image]="
+                                        'url(' +
+                                        this.auth.domain +
+                                        '/images/no-photo.png' +
+                                        ')'
+                                    "
+                                ></div>
+                                <input
+                                    type="file"
+                                    name="file"
+                                    class="d-none"
+                                    id="file"
+                                />
+                                <button
+                                    class="btn btn-primary browse-btn"
+                                    nbSpinnerStatus="primary"
+                                    nbSpinnerSize="tiny"
+                                    nbSpinnerMessage=""
+                                    (click)="openFile($event, 'file')"
+                                >
+                                    Change Profile Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button
+                            type="submit"
+                            nbButton
+                            [status]="buttonStatus"
+                            outline
+                            (click)="executeAction(form)"
+                        >
+                            Update
+                        </button>
+                        &nbsp;
+                        <button
+                            type="button"
+                            nbButton
+                            status="danger"
+                            (click)="closeModal()"
+                            outline
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </nb-card-body>
+    </nb-card>
+</div>

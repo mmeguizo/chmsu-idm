@@ -5,92 +5,60 @@ const { v4: uuidv4 } = require('uuid');
 const { comparePassword } = require('../config/password');
 
 module.exports = (router) => {
-    router.post('/register', (req, res) => {
-        if (!req.body.email) {
-            res.json({ success: false, message: 'You must provide an email' });
-        } else {
-            if (!req.body.username) {
-                res.json({
-                    success: false,
-                    message: 'You must provide an username',
-                });
-            } else {
-                if (!req.body.password) {
-                    res.json({
-                        success: false,
-                        message: 'You must provide an password',
-                    });
-                } else {
-                    let user = new User({
-                        id: uuidv4(),
-                        email: req.body.email.toLowerCase(),
-                        username: req.body.username.toLowerCase(),
-                        password: req.body.password,
-                        role: req.body.role,
-                    });
+    router.post('/register', async (req, res) => {
+        console.log({ req: req.body });
 
-                    user.save((err, data) => {
-                        if (err) {
-                            if (err.code === 11000) {
-                                res.json({
-                                    success: false,
-                                    message:
-                                        'User name or Email already exists ',
-                                    err: err.message,
-                                });
-                            } else {
-                                if (err.errors) {
-                                    //for specific error email,username and password
-                                    if (err.errors.email) {
-                                        res.json({
-                                            success: false,
-                                            message: err.errors.email.message,
-                                        });
-                                    } else {
-                                        if (err.errors.username) {
-                                            res.json({
-                                                success: false,
-                                                message:
-                                                    err.errors.username.message,
-                                            });
-                                        } else {
-                                            if (err.errors.password) {
-                                                res.json({
-                                                    success: false,
-                                                    message:
-                                                        err.errors.password
-                                                            .message,
-                                                });
-                                            } else {
-                                                res.json({
-                                                    success: false,
-                                                    message: err,
-                                                });
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    res.json({
-                                        success: false,
-                                        message: 'Could not save user Error : ',
-                                    });
-                                }
-                            }
-                        } else {
-                            res.json({
-                                success: true,
-                                message: 'Account Registered successfully',
-                                data: {
-                                    email: data.email,
-                                    username: data.username,
-                                },
-                            });
-                        }
-                    });
-                }
-            }
+        const { email, username, password, role } = req.body;
+
+        const userExists = await User.findOne({
+            $or: [
+                { email: email.toLowerCase() },
+                { username: username.toLowerCase() },
+            ],
+        });
+
+        if (userExists) {
+            return res.json({
+                success: false,
+                message: 'User name or Email already exists',
+            });
         }
-        // res.send('POST in authetication')
+        if (!email || !username || !password) {
+            return res.json({
+                success: false,
+                message:
+                    'Invalid input, please provide email, username and matching password',
+            });
+        }
+
+        try {
+            const newUser = new User({
+                id: uuidv4(),
+                email: email.toLowerCase(),
+                username: username.toLowerCase(),
+                password,
+                role: role.toLowerCase(),
+            });
+
+            const savedUser = await newUser.save();
+
+            res.json({
+                success: true,
+                message: 'This user is successfully Registered',
+                data: { email: savedUser.email, username: savedUser.username },
+            });
+        } catch (err) {
+            console.error(err);
+
+            const errorMessages = Object.values(err.errors).map(
+                ({ message }) => message
+            );
+
+            return res.json({
+                success: false,
+                message: errorMessages.join(', '),
+            });
+        }
     });
 
     router.get('/checkEmail/:email', (req, res) => {
@@ -176,15 +144,12 @@ module.exports = (router) => {
 
             const newUser = user.toObject();
             delete newUser.password;
-            delete newUser._id;
+            // delete newUser._id;
             delete newUser.__v;
 
             const token = jwt.sign(newUser, config.secret, {
                 expiresIn: '24h',
             });
-
-            console.log({ token: token });
-
             return res.json({
                 success: true,
                 message: 'Password is Correct',
@@ -206,6 +171,7 @@ module.exports = (router) => {
         //         req.headers['authorization'].indexOf(' ') + 1
         //     );
         // }
+        token = req.headers['authorization'];
 
         if (!token) {
             res.json({ success: false, message: 'No token provided' });

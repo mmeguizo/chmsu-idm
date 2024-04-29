@@ -39,6 +39,8 @@ import { AdminRoutingModule } from './admin-routing.module';
 // import { FilesComponent } from '../shared/files/files.component';
 // import { UploadsComponent } from '../shared/uploads/uploads.component';
 
+
+
 const NB_MODULES = [
     NbLayoutModule,
     NbMenuModule,

@@ -25,6 +25,7 @@ import { AdminModule } from './admin/admin.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from '@auth0/auth0-angular';
+import { SharedModule } from './shared/shared.module';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -54,16 +55,17 @@ export function tokenGetter() {
             authorizationParams: {
                 redirect_uri: window.location.origin,
             },
-			 useRefreshTokens: true,
-			 useRefreshTokensFallback: false,
-			 cacheLocation: 'localstorage',
+            useRefreshTokens: true,
+            useRefreshTokensFallback: false,
+            cacheLocation: 'localstorage',
         }),
         JwtModule.forRoot({
             config: {
                 tokenGetter: tokenGetter,
             },
         }),
-        AdminModule,
+        // AdminModule,
+        SharedModule,
     ],
     bootstrap: [AppComponent],
 })

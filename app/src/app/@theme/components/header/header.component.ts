@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import {
+    NbDialogService,
     NbMediaBreakpointsService,
     NbMenuService,
     NbSidebarService,
     NbThemeService,
 } from '@nebular/theme';
-import { AuthService } from '@auth0/auth0-angular';
-import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { AuthServices } from '../../../@core/services/auth.service';
+import { CommonComponent } from '../../../shared/common/common.component';
+import { ViewEncapsulation } from '@angular/core';
+import { ProfileComponent } from '../../../shared/profile/profile.component';
 
 @Component({
     selector: 'ngx-header',
@@ -48,18 +50,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     name: string;
     profile_pic: string;
-
-    profileJson: string = null;
+    empData: any;
 
     constructor(
         private sidebarService: NbSidebarService,
         private menuService: NbMenuService,
         private themeService: NbThemeService,
-        private userService: UserData,
         private layoutService: LayoutService,
         public auth: AuthServices,
-        public auth0: AuthService,
         private breakpointService: NbMediaBreakpointsService,
+        private dialog: NbDialogService,
         @Inject(DOCUMENT) private doc: Document
     ) {
         const savedTheme = this.getCurrentTheme();
@@ -84,7 +84,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         });
 
         // this.name = this.auth.getTokenUsername();
-        // this.profile_pic = this.auth.getUserProfilePic() || 'no-photo.png';
+        this.profile_pic = this.auth.getUserProfilePic() || 'no-photo.png';
 
         const { xl } = this.breakpointService.getBreakpointsMap();
         this.themeService
@@ -107,15 +107,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.currentTheme = themeName;
                 this.saveTheme(themeName);
             });
-        setTimeout(() => {
-            this.auth0.user$.subscribe(
-                (profile) =>
-                    (this.profileJson = JSON.stringify(profile, null, 2))
-            );
-        });
-        console.log(this.auth0.user$);
-
-        console.log(this.profileJson);
     }
 
     ngOnDestroy() {
@@ -131,10 +122,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentTheme = themeName;
         this.themeService.changeTheme(themeName);
         localStorage.setItem('theme', themeName);
-
-        console.log(this.auth0.user$);
-
-        console.log(this.profileJson);
     }
 
     saveTheme(themeName: string) {
@@ -157,26 +144,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    onItemSelection(title) {
+    async onItemSelection(title) {
         if (title === 'Log out') {
-            console.log('clikc logout');
-            console.log(this.auth0.user$);
-
-            console.log(this.profileJson);
-            // const activeModal = this.ngbModal.open(CommonComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
-            // activeModal.componentInstance.headerTitle = 'Logout',
-            // activeModal.componentInstance.bodyContent ='Are you sure you want to logout?',
-            // activeModal.componentInstance.username = this.name
+            let varData = {
+                title: 'Log out',
+                message: 'Are you sure you want to log out?',
+                name: await this.auth.getTokenUsername(),
+            };
+            const dialogRef = this.dialog
+                .open(CommonComponent, { context: { employeeId: varData } })
+                .onClose.subscribe((data) => data);
         } else if (title === 'Profile') {
             console.log('click profile');
-
-            // const activeModal = this.ngbModal.open(UpdateProfileComponent, { size: 'sm', container: 'nb-layout', windowClass: 'min_height', backdrop: 'static' });
+            const dialogRef = this.dialog
+                .open(ProfileComponent, {
+                    context: { employeeId: this.auth.getTokenUserID() },
+                })
+                .onClose.subscribe((data) => data);
         }
-    }
-
-    logout() {
-        this.auth0.logout({
-            logoutParams: { returnTo: this.doc.location.origin },
-        });
     }
 }

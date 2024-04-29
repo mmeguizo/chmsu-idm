@@ -13,7 +13,7 @@ require('http').Server(app);
 //routes
 const users = require('./routes/users')(router);
 const authentication = require('./routes/authentication')(router);
-const file = require('./routes/file')(router);
+const file = require('./routes/fileupload')(router);
 
 mongoose
     .connect(config.uri)
@@ -30,8 +30,8 @@ app.use('/images', express.static(path.join(__dirname, './images')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads/files')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads/images')));
 
-app.use('/users', users);
 app.use('/authentication', authentication);
+app.use('/users', users);
 app.use('/fileupload', file);
 app.use(
     '/profile_pic',
@@ -42,6 +42,6 @@ app.get('*', (req, res) => {
     //   res.sendFile(path.join(__dirname + '/app/dist/index.html'));
 });
 
-app.listen(PORT || 52847, () => {
+app.listen(PORT, () => {
     console.log('Connected on port ' + PORT);
 });

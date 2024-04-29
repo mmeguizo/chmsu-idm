@@ -176,17 +176,25 @@ export class AuthServices {
     }
 
     getTokenUsername() {
-        return jwtDecode<UserToken>(localStorage.getItem('token')).username;
+        return (
+            jwtDecode<UserToken>(localStorage.getItem('token')).username || ''
+        );
     }
     getTokenUserID() {
-        return jwtDecode<UserToken>(localStorage.getItem('token')).id;
+        return jwtDecode<UserToken>(localStorage.getItem('token')).id || '';
+    }
+    getTokenUserObjectID() {
+        return jwtDecode<UserToken>(localStorage.getItem('token'))._id || '';
     }
     getUserProfilePic() {
-        return jwtDecode<UserToken>(localStorage.getItem('token')).profile_pic;
+        return (
+            jwtDecode<UserToken>(localStorage.getItem('token')).profile_pic ||
+            'no-photo.png'
+        );
     }
 
     getUserRole() {
-        return jwtDecode<UserToken>(localStorage.getItem('token')).role;
+        return jwtDecode<UserToken>(localStorage.getItem('token')).role || '';
     }
 
     getProfile() {
