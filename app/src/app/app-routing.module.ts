@@ -22,6 +22,11 @@ export const routes: Routes = [
             import('./admin/admin.module').then((m) => m.AdminModule),
     },
     {
+        path: 'user',
+        loadChildren: () =>
+            import('./user/user.module').then((m) => m.UserModule),
+    },
+    {
         path: 'pages',
         loadChildren: () =>
             import('./pages/pages.module').then((m) => m.PagesModule),
