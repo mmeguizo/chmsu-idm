@@ -1,0 +1,100 @@
+.error {
+    color: #ff6b83;
+}
+.fieldError {
+    border: 2px solid #ff6b83;
+}
+.avatar-container {
+    margin-top: 20px;
+    margin-left: 20px;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+}
+
+.avatar-image {
+    font-size: 150px;
+    padding-top: 11%;
+    margin: auto !important;
+}
+
+.display-photo {
+    height: 150px;
+    width: 150px;
+    border: 2px solid #eee;
+    border-radius: 50%;
+    background-color: #ccc;
+    background-size: cover;
+    background-position: center;
+    margin: 0 auto;
+    margin-left: 27px;
+}
+
+p {
+    margin-top: 5px;
+}
+
+.browse-btn {
+    margin-top: 2%;
+    padding-top: 2%;
+}
+
+::ng-deep .cdk-overlay-container {
+    z-index: 9999999 !important;
+}
+
+.critical {
+    display: none;
+}
+
+.password-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 47%;
+    left: 97%;
+}
+.main-profile-container {
+    margin-left: 30%;
+}
+
+.card-container {
+    width: 50%;
+}
+.avatar-container {
+    margin: auto;
+}
+
+@media (max-width: 512px) {
+    .card-container {
+        width: 72%;
+    }
+
+    .main-profile-container {
+        margin-left: 12%;
+    }
+
+    .display-photo {
+        height: 120px;
+        width: 120px;
+        margin-left: 39px;
+    }
+
+    .browse-btn {
+        margin-left: -2%;
+        margin-top: 11%;
+    }
+
+    .password-icon {
+        left: 95%;
+    }
+}
+
+@media (max-width: 412px) {
+    .card-container {
+        width: 90%;
+    }
+
+    .main-profile-container {
+        margin-left: 8%;
+    }
+}

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { AuthService } from '@auth0/auth0-angular';
-import { AuthService } from '../../@core/services/auth.service';
+import { AuthServices } from '../../@core/services/auth.service';
 
 @Component({
     selector: 'ngx-dashboard',
@@ -9,12 +8,9 @@ import { AuthService } from '../../@core/services/auth.service';
 })
 export class DashboardComponent implements OnInit {
     profileJson: string = null;
-    constructor(
-        // public auth: AuthService,
-        public user: AuthService
-    ) {}
+    constructor(public user: AuthServices) {}
 
-    ngOnInit() {
+    async ngOnInit() {
         console.log('dashboard component');
     }
 }

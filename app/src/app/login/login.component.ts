@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-// import { AuthService } from '@auth0/auth0-angular';
-import { AuthService } from '../@core/services/auth.service';
+import { AuthServices } from '../@core/services/auth.service';
 
-// import { AuthService } from '../@core/services/auth.service';
 // import { ConnectionService } from '../@core/services/connection.service';
 import { jwtDecode } from 'jwt-decode';
 import { UserToken } from '../@core/data/user-token';
@@ -35,30 +33,18 @@ export class LoginComponent implements OnInit {
         private formBuilder: FormBuilder,
         // private authService: AuthService,
         private router: Router,
-        // public auth: AuthService,
-        public user: AuthService
+        public user: AuthServices
     ) {
         // this.createForm();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.createForm();
         // console.log({ login: 'login component' });
         // console.log(window.location.origin);
     }
 
-    // loginWithRedirect() {
-    //     console.log(this.auth);
-    //     this.user.loginWithRedirect();
-    //     this.user.loginWithRedirect();
-    //     this.auth.loginWithRedirect({
-    //         appState: { target: '/admin' },
-    //     });
-    // }
-
     createForm() {
-        console.log({ login: 'login form' });
-
         this.form = this.formBuilder.group({
             username: ['', Validators.required], // Username field
             password: ['', Validators.required], // Password field
@@ -91,11 +77,6 @@ export class LoginComponent implements OnInit {
 
         // Function to send login data to API
         this.user.login(user).subscribe((token: any) => {
-            let decoded = jwtDecode<UserToken>(token.token);
-
-            console.log({ token: token });
-            console.log({ decoded: decoded });
-
             // Check if response was a success or error
             if (!token.success) {
                 this.user.makeToast(
@@ -106,6 +87,7 @@ export class LoginComponent implements OnInit {
                 this.processing = false; // Enable submit button
                 this.enableForm(); // Enable form for editting
             } else {
+                let decoded = jwtDecode<UserToken>(token.token);
                 this.user.makeToast('success', 'Success', token.message);
                 this.user.storeUserData(token.token, decoded);
                 if (this.user.CurrentlyloggedIn()) {
