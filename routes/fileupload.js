@@ -94,9 +94,6 @@ module.exports = (router) => {
     });
 
     router.post('/addAvatar', (req, res) => {
-        console.log('add avatar');
-        console.log(req.body);
-
         let useFor = req.body.useFor;
         let username = 'tester';
         let formidable = require('formidable');

@@ -364,7 +364,6 @@ module.exports = (router) => {
             req.body;
         const user = await User.findById(id);
         let userData = {};
-
         if (confirm) {
             const checkPassword = await bcrypt.compare(password, user.password);
             if (!checkPassword) {
@@ -404,6 +403,11 @@ module.exports = (router) => {
                     });
             }
         } else {
+            userData.role = user.role;
+            userData.username = username;
+            userData.email = email;
+            userData.profile_pic = profile_pic;
+
             User.findOneAndUpdate(
                 { _id: id },
                 { $set: userData },

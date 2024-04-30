@@ -45,8 +45,6 @@ export class LoginComponent implements OnInit {
     }
 
     createForm() {
-        console.log({ login: 'login form' });
-
         this.form = this.formBuilder.group({
             username: ['', Validators.required], // Username field
             password: ['', Validators.required], // Password field
